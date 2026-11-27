@@ -1,43 +1,35 @@
 services:
   backend:
     image: aalex42/backend
-    ports:
-      - 8080:8080
     environment:
       - REDIS_HOST=redis
-      - POSTGRES_HOST=postgres
+      - POSTGRES_HOST=db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DATABASE=postgres
       - REQUEST_ORIGIN=http://localhost:8000
     depends_on:
-      postgres:
+      db:
         condition: service_healthy
   frontend:
     image: aalex42/frontend
-    ports:
-      - 5001:5001
   redis:
     image: redis:latest
-    ports:
-      - 6379:6379
-  postgres:
+  db:
     image: postgres:latest
     environment:
-      - POSTGRES_HOST=postgres
+      - POSTGRES_HOST=db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DATABASE=postgres
     volumes:
       - ./database:/var/lib/postgresql
-    ports:
-      - 5432:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
-  proxy-server:
+  nginx:
     image: nginx
     ports:
       - 8000:80
