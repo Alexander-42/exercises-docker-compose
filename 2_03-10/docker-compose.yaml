@@ -1,0 +1,11 @@
+services:
+  backend:
+    image: aalex42/backend
+    ports:
+      - 8080:8080
+  frontend:
+    image: aalex42/frontend
+    ports:
+      - 5001:5001
+    environment:
+      - BACKEND_APP_URL=http://localhost:8080
